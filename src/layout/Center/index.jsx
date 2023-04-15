@@ -1,7 +1,7 @@
 import React from 'react'
 import {CenterStyleDiv} from './style'
 import {useCanvasData} from '@/hooks'
-import Cmp from '../../compont/Cmp'
+import Cmp from './c-cmps/Cmp'
  const Center = () =>{
   const canvasData = useCanvasData()
   return (
