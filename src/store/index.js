@@ -1,5 +1,5 @@
-import { useRef } from "react";
 import { getOnlyKey } from "../utils";
+
 const defaultCanvas = {
   // 页面样式
   style: {
@@ -14,77 +14,103 @@ const defaultCanvas = {
   },
   // 组件
   cmps: [],
-
-  // 仅用于测试
-  // cmps: [
-  //   {
-  //     key: getOnlyKey(),
-  //     desc: "文本",
-  //     value: "文本",
-  //     style: {
-  //       position: "absolute",
-  //       top: 0,
-  //       left: 0,
-  //       width: 100,
-  //       height: 30,
-  //       fontSize: 12,
-  //       color: "red",
-  //     },
-  //   },
-  // ],
 };
 
+// 状态
 export class Canvas {
   constructor(_canvas = defaultCanvas) {
     this.canvas = _canvas; // 页面数据
-    
+
+    // 被选中的组件的下标
+    this.selectedCmpIndex = null;
+
     this.listeners = [];
   }
-  // 获取画布数据
+
+  // get
+
   getCanvas = () => {
     return { ...this.canvas };
   };
 
-// 获取组件数据
   getCanvasCmps = () => {
     return [...this.canvas.cmps];
-  }
-// 修改画布数据
-  setCanvas(canvas) {
-    Object.assign(this.canvas, canvas);
-  }
-  // 修改组件数据
-  addCmp = (_cmp) => {
-    // 更新画布数据
-    const cmp = {key:getOnlyKey(),..._cmp}
-    this.canvas.cmps.push(cmp);
-
-    // 组件更新
-    this.updataApp()
-    
   };
-  // 组件更新
-  updataApp = ()=> {
-    this.listeners.forEach((listener) => {
-      listener();
+
+  getSelectedCmpIndex = () => {
+    return this.selectedCmpIndex;
+  };
+  // 返回选中组件的参数
+  getSelectedCmp = () => {
+    const cmps = this.getCanvasCmps();
+
+    return cmps[this.selectedCmpIndex];
+  };
+
+  setSelectedCmpIndex = (index) => {
+    if (this.selectedCmpIndex === index) {
+      return;
+    }
+
+    this.selectedCmpIndex = index;
+
+    this.updateApp();
+  };
+
+  // set
+  setCanvas = (_canvas) => {
+    Object.assign(this.canvas, _canvas);
+  };
+
+  // 新增组件
+  addCmp = (_cmp) => {
+    const cmp = { key: getOnlyKey(), ..._cmp };
+    // 1. 更新画布数据
+    this.canvas.cmps.push(cmp);
+    // 2. 选中新增的组件为选中组件
+    this.selectedCmpIndex = this.canvas.cmps.length - 1;
+    // 3. 更新组件
+    this.updateApp();
+  };
+
+  updateSelectedCmp = (newStyle = {}, newValue) => {
+    const selectedCmp = this.getSelectedCmp();
+
+    Object.assign(this.canvas.cmps[this.getSelectedCmpIndex()], {
+      style: { ...selectedCmp.style, ...newStyle },
+      // todo
+      // value:
     });
-  }
-  // 监听组件更新
+    //  更新组件
+    this.updateApp();
+  };
+
+  updateApp = () => {
+    // 希望组件更新
+    console.log(111);
+    this.listeners.forEach((lis) => lis());
+  };
+
   subscribe = (listener) => {
     this.listeners.push(listener);
+    // 取消时间
     return () => {
-      this.listeners = this.listeners.filter((l) => l !== listener);
+      this.listeners = this.listeners.filter((lis) => lis !== listener);
     };
   };
-  // 公开接口
-  getPubilcCanvas() {
-    const obj = {
-      getCanvas:this.getCanvas,
-      getCanvasCmps:this.getCanvasCmps,
-      addCmp:this.addCmp,
-      subscribe:this.subscribe
-    }
-    return obj;
-  }
 
+  getPublicCanvas = () => {
+    const obj = {
+      getCanvas: this.getCanvas,
+      getCanvasCmps: this.getCanvasCmps,
+      addCmp: this.addCmp,
+      getSelectedCmpIndex: this.getSelectedCmpIndex,
+      getSelectedCmp: this.getSelectedCmp,
+      setSelectedCmpIndex: this.setSelectedCmpIndex,
+      updateSelectedCmp: this.updateSelectedCmp,
+      subscribe: this.subscribe,
+    };
+
+    return obj;
+  };
 }

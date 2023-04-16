@@ -1,15 +1,13 @@
-import React from 'react'
-import {LeftMenuStyleDiv} from './style'
-import {settings} from './data'
-import {useCanvasAddCmp} from '@/hooks'
+import React from "react";
+import { LeftMenuStyleDiv } from "./style";
+import { settings } from "./data";
+import { useCanvasByContext } from "@/hooks";
 export default function LeftMenuList() {
-
-  const canvas = useCanvasAddCmp();
-
+  const canvas = useCanvasByContext();
 
   return (
     <LeftMenuStyleDiv>
-        <ul className="box">
+      <ul className="box">
         {settings.map((item) => (
           <li
             key={item.value}
@@ -21,5 +19,5 @@ export default function LeftMenuList() {
         ))}
       </ul>
     </LeftMenuStyleDiv>
-  )
+  );
 }

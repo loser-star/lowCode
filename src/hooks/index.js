@@ -1,39 +1,39 @@
+import { createContext, useContext, useRef } from "react";
 
-import  { createContext, useContext,useRef } from "react";
+import { Canvas } from "../store/index";
 
-import {Canvas} from '../store/index'
 // 创建useContent
- export const CanvasContext = createContext();
+export const CanvasContext = createContext();
 
-//  导出useContext.getCanvas数据
- export function useCanvasData() {
+export function useCanvas(canvas) {
+  const canvasRef = useRef();
+
+  if (!canvasRef.current) {
+    if (canvas) {
+      canvasRef.current = canvas;
+    } else {
+      const canvas = new Canvas();
+      canvasRef.current = canvas.getPublicCanvas();
+    }
+  }
+
+  return canvasRef.current;
+}
+
+// 获取操作canvas数据的函数
+export function useCanvasByContext() {
+  const canvas = useContext(CanvasContext);
+
+  return canvas;
+}
+
+// 获取的是画布数据，this.canvas
+export function useCanvasData() {
   const canvas = useContext(CanvasContext);
   return canvas.getCanvas();
 }
 
-//  导出useContext.getCanvasCmps组件数据
 export function useCanvasCmps() {
   const canvas = useContext(CanvasContext);
   return canvas.getCanvasCmps();
-}
-// 导出自定义useCanvasAddCmp
-export function useCanvasAddCmp() {
-  const canvas = useContext(CanvasContext);
-  return canvas;
-}
-
-
-// 自定义useCanvas
-export function useCanvas(canvas) {
-
-  const canvasRef = useRef();
-  if(!canvasRef.current) {
-    if(canvas) {
-      canvasRef.current = canvas;
-    } else {
-      const canvas = new Canvas();
-      canvasRef.current = canvas.getPubilcCanvas();
-    }
-  }
-  return canvasRef.current;
 }

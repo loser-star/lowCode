@@ -24,62 +24,11 @@ export const settings = [
       fontSize: 28,
       height: 50,
       lineHeight: "50px",
+      textAlign: 'center'
     },
   },
   {
     value: "正文",
     style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
-  {
-    value: "正文",
-    style: defaultStyle,
-  },
+  }
 ];

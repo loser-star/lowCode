@@ -1,17 +1,18 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const CenterStyleDiv = styled.div`
- display: flex;align-items: center;
+export const CenterDiv = styled.div`
+  display: flex;
+  // align-items: center;
   justify-content: center;
-  align-items: center;
   flex: 1;
-  min-height: 80%;
+  min-height: 100%;
+  padding-top: 50px;
   text-align: center;
   background-color: rgba(240, 243, 247, 1);
   .canvas {
     position: relative;
     width: 320px;
-    height: 520PX;
+    height: 568px;
     border: solid 1px #dddddd;
     box-shadow: #ccc 1px 1px 20px;
     background-color: #fff;
