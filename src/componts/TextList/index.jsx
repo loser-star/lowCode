@@ -2,9 +2,12 @@ import React from "react";
 import { LeftMenuStyleDiv } from "./style";
 import { settings } from "./data";
 import { useCanvasByContext } from "@/hooks";
-export default function LeftMenuList() {
+export default function TextList() {
   const canvas = useCanvasByContext();
-
+  const addCmp = (_cmp) => {
+    console.log(_cmp);
+    canvas.addCmp(_cmp);
+  };
   return (
     <LeftMenuStyleDiv>
       <ul className="box">
@@ -12,7 +15,7 @@ export default function LeftMenuList() {
           <li
             key={item.value}
             className="item"
-            onClick={() => canvas.addCmp({ ...item,type:'text' })}
+            onClick={() => addCmp({ ...item,type:'text' })}
           >
             {item.value}
           </li>

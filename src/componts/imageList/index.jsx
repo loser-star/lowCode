@@ -2,7 +2,7 @@ import React from "react";
 import { LeftMenuStyleDiv } from "./style";
 import { settings } from "./data";
 import { useCanvasByContext } from "@/hooks";
-export default function LeftMenuList() {
+export default function ImageList() {
   const canvas = useCanvasByContext();
 
   return (
@@ -10,13 +10,15 @@ export default function LeftMenuList() {
       <ul className="box">
         {settings.map((item) => (
           <li
-            key={item.value}
+            key={item.id}
             className="item"
-            onClick={() => canvas.addCmp({ ...item,type:'text' })}
+            onClick={() => canvas.addCmp({ ...item,type:'image' })}
           >
-            {item.value}
+           <img src={item.value} alt="" />
           </li>
         ))}
+
+        {/* {settings} */}
       </ul>
     </LeftMenuStyleDiv>
   );

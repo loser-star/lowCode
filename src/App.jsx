@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useReducer, useEffect } from "react";
 
 import Header from "./layout/Header";
 import Left from "./layout/Left";
@@ -11,7 +11,17 @@ import { CanvasContext } from "./hooks/index.js";
 import { AppStyleDiv } from "./AppStyle.js";
 function App() {
   const canvas = useCanvas();
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
+  useEffect(() => {
+    const unsubscribe = canvas.subscribe(() => {
+      forceUpdate();
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
   return (
     <AppStyleDiv>
       <CanvasContext.Provider value={canvas}>

@@ -4,8 +4,8 @@ const defaultCanvas = {
   // 页面样式
   style: {
     width: 320,
-    height: 568,
-    backgroundColor: "#ffffff00",
+    height: 500,
+    backgroundColor: "#ffffff",
     backgroundImage: "",
     backgroundPosition: "center",
     backgroundSize: "cover",
@@ -43,7 +43,6 @@ export class Canvas {
   // 返回选中组件的参数
   getSelectedCmp = () => {
     const cmps = this.getCanvasCmps();
-
     return cmps[this.selectedCmpIndex];
   };
 
@@ -65,6 +64,7 @@ export class Canvas {
   // 新增组件
   addCmp = (_cmp) => {
     const cmp = { key: getOnlyKey(), ..._cmp };
+    console.log("addCmp", cmp);
     // 1. 更新画布数据
     this.canvas.cmps.push(cmp);
     // 2. 选中新增的组件为选中组件
@@ -85,9 +85,20 @@ export class Canvas {
     this.updateApp();
   };
 
+  updateCanvasStyle = (newStyle) => {
+    this.canvas.style = {
+      ...this.canvas.style,
+      ...newStyle,
+    };
+
+    console.log("this", this.canvas.style); //sy-log
+    this.updateApp();
+  };
+
+
   updateApp = () => {
+    console.log(1111)
     // 希望组件更新
-    console.log(111);
     this.listeners.forEach((lis) => lis());
   };
 
@@ -109,6 +120,7 @@ export class Canvas {
       setSelectedCmpIndex: this.setSelectedCmpIndex,
       updateSelectedCmp: this.updateSelectedCmp,
       subscribe: this.subscribe,
+      updateCanvasStyle: this.updateCanvasStyle,
     };
 
     return obj;
