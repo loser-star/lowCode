@@ -1,14 +1,26 @@
 import React, { Component } from "react";
 import { CanvasContext } from "@/hooks";
 import { CmpDiv } from "./styled";
-
+import { useState } from "react";
 import classNames from "classnames";
+import ContextMenu  from "@/componts/ContextMenu";
 // todo 拖拽、删除、改变层级关系等
 
 import Text from "@/componts/Text";
 import Image from "@/componts/Image";
 export default class Cmp extends Component {
   static contextType = CanvasContext;
+
+  
+  constructor(props) {
+    super(props);
+    this.state = {showContextMenu: false};
+  }
+
+  handleShowContextMenu = (e) => {
+    e.preventDefault();
+    this.setState({showContextMenu: true});
+  };
 
   onDragStart = (e) => {
     this.setSelected(e);
@@ -21,7 +33,7 @@ export default class Cmp extends Component {
   };
 
   setSelected = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     this.context.setSelectedCmpIndex(this.props.index);
   };
   onMouseDown = (e) => {
@@ -35,7 +47,7 @@ export default class Cmp extends Component {
     let startX = e.pageX;
     let startY = e.pageY;
 
-    const { cmp } = this.props;
+    const {cmp} = this.props;
     const move = (e) => {
       const x = e.pageX;
       const y = e.pageY;
@@ -72,14 +84,9 @@ export default class Cmp extends Component {
           newFontSize < 12 ? 12 : newFontSize > 130 ? 130 : newFontSize;
         Object.assign(newStyle, {
           lineHeight: newHeight + "px",
-          fontSize: newFontSize,
+          fontSize: parseInt(newFontSize),
         });
       }
-
-      Object.assign(newStyle, {
-        width: cmp.style.width + disX,
-        height: cmp.style.height + disY,
-      });
 
       this.context.updateSelectedCmp(newStyle);
 
@@ -90,6 +97,8 @@ export default class Cmp extends Component {
     const up = () => {
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
+
+      this.context.recordCanvasChangeHistory();
     };
     document.addEventListener("mousemove", move);
     document.addEventListener("mouseup", up);
@@ -132,6 +141,7 @@ export default class Cmp extends Component {
     const up = () => {
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
+      this.context.recordCanvasChangeHistory();
     };
 
     document.addEventListener("mousemove", move);
@@ -143,15 +153,17 @@ export default class Cmp extends Component {
 
 
   render() {
-    const { cmp, selected } = this.props;
+    const { cmp, selected,zoom,index } = this.props;
     const { style, value } = cmp;
     const { width, height } = style;
     const transform = `rotate(${style.transform}deg)`;
+
     return (
       <CmpDiv
         draggable="true"
         onDragStart={this.onDragStart}
         onClick={this.setSelected}
+        onContextMenu={this.handleShowContextMenu}
       >
         {/* 组件本身 */}
         <div className="cmp" style={{...style,transform}}>
@@ -248,6 +260,22 @@ export default class Cmp extends Component {
           />
 
         </ul>
+
+      
+        {selected && this.state.showContextMenu && (
+          <ContextMenu
+            index={index}
+            style={{
+              position: 'absolute',
+              top: style.top,
+              left: style.left + width,
+              transform: `scale(${100 / zoom})`,
+              width: 100,
+            }}
+            cmp={cmp}
+          />
+        )}
+
       </CmpDiv>
     );
   }

@@ -1,12 +1,14 @@
 import { useCanvasByContext } from "@/hooks";
 import Cmp from "./c-cmps/Cmp";
 import { CenterDiv } from "./style";
-import { useCallback, useReducer, useEffect } from "react";
+import { useCallback, useReducer, useEffect,useState } from "react";
+import classNames from "classnames";
 
 export default function Center(props) {
   const canvas = useCanvasByContext();
 
   const canvasData = canvas.getCanvas();
+  console.log('canvasData', canvasData);
 
   const { cmps } = canvasData;
 
@@ -28,6 +30,7 @@ export default function Center(props) {
     const left = oldStyle.left + disX;
 
     canvas.updateSelectedCmp({ top, left });
+    canvas.recordCanvasChangeHistory();
   }, []);
 
   const allowDrop = useCallback((e) => {
@@ -38,9 +41,6 @@ export default function Center(props) {
 
 
   useEffect(() => {
-    document.getElementById("center").addEventListener("click", () => {
-      canvas.setSelectedCmpIndex(-1);
-    });
     document.getElementById("center").onkeydown = whichKeyEvent
   }, []);
 
@@ -89,6 +89,7 @@ export default function Center(props) {
     }
 
     canvas.updateSelectedCmp(newStyle);
+    canvas.recordCanvasChangeHistory();
   };
 
   // 重新渲染
@@ -102,8 +103,10 @@ export default function Center(props) {
   //     unsubscribe();
   //   };
   // }, []);
+
+  const [zoom, setZoom] = useState(() =>parseInt(canvasData.style.width) > 790 ? 50 : 100);
   return (
-    <CenterDiv id="center" tabIndex='0'>
+    <CenterDiv id="center" tabIndex='0' onClick={ ()=>canvas.setSelectedCmpIndex(-1)}>
       <div className="canvas" onDrop={onDrop} onDragOver={allowDrop}
       style={{
         ...canvasData.style
@@ -114,9 +117,41 @@ export default function Center(props) {
             cmp={cmp}
             selected={selectedIndex === index}
             index={index}
+            zoom={zoom}
           />
         ))}
       </div>
+
+      <ul className='zoom'>
+        <li
+          className={classNames('icon')}
+          onClick={() => {
+            setZoom(zoom + 25);
+          }}>
+          +
+        </li>
+        <li className={classNames('num')}>
+          <input
+            type="num"
+            value={zoom}
+            onChange={(e) => {
+              let newValue = e.target.value;
+              newValue = newValue >= 1 ? newValue : 1;
+              setZoom(newValue - 0);
+            }}
+          />
+          %
+        </li>
+        <li
+          className={classNames('icon')}
+          onClick={() => {
+            const newZoom = zoom - 25 >= 1 ? zoom - 25 : 1;
+            setZoom(newZoom);
+          }}>
+          -
+        </li>
+      </ul>
+
     </CenterDiv>
   );
 }

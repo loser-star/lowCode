@@ -20,4 +20,34 @@ img {
     }
   }
 }
+
+
+  .cmps {
+    width: 80px;
+  }
+  .cmp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    cursor: pointer;
+
+    &.selected,
+    &:hover {
+      color: #0057ff;
+      .cmpIcon,
+      .cmpText {
+        color: #0057ff;
+      }
+    }
+  }
+  .cmpIcon {
+    font-size: 20px;
+    color: #181819;
+  }
+  // 文字
+  .cmpText {
+    font-size: 14px;
+    color: #666;
+  }
 `
